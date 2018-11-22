@@ -11,5 +11,5 @@ setup(name='parton',
       long_description_content_type='text/markdown',
       license='MIT',
       packages=find_packages(),
-      install_requires=['numpy', 'scipy', 'setuptools', 'pyyaml'],
+      install_requires=['numpy', 'scipy', 'setuptools', 'pyyaml', 'appdirs'],
       )
