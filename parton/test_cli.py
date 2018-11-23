@@ -17,7 +17,7 @@ class TestCLI(unittest.TestCase):
         listfile = os.path.join(dir, 'pdfsets.index')
         self.assertTrue(os.path.exists(listfile))
         self.assertIn(' CT10 ', open(listfile).read())
-        cli.main(['--listdir', dir, '--pdfdir', dir, 'install', 'CT10'])
+        cli.main(['--listdir', dir, '--pdfdir', dir, 'install', 'CT10', '-y'])
         self.assertTrue(os.path.exists(os.path.join(dir, 'CT10')))
         inst = io.list_installed(dir, dir)
         self.assertListEqual(inst, ['CT10'])
