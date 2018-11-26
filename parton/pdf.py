@@ -223,10 +223,10 @@ class PLumi(object):
         def f2(x):
             return self.pdf.xfxQ2(p2, x, self.Q2).ravel() / x
         _Lx = np.linspace(-10, 0, num=self.N)
-        _f1 = np.flip(f1(np.exp(_Lx)).ravel())
-        _f2 = np.flip(f2(np.exp(_Lx)).ravel())
+        _f1 = np.flip(f1(np.exp(_Lx)).ravel(), 0)
+        _f2 = np.flip(f2(np.exp(_Lx)).ravel(), 0)
         _y = np.convolve(_f1, _f2, 'full')[:self.N] / self.N * 10
-        return scipy.interpolate.interp1d(np.flip(_Lx), _y, kind='cubic', bounds_error=False, fill_value=np.nan)
+        return scipy.interpolate.interp1d(np.flip(_Lx, 0), _y, kind='cubic', bounds_error=False, fill_value=np.nan)
 
     def interpolator(self, p1, p2):
         """Return an instance of the `scipy.interpolate.interp1d` interpolator
