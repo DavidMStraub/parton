@@ -231,9 +231,17 @@ lhapdf_CT10 ={
  (4, 0.31622776601683794, 1778.2794100389228): 0.0020684044457654413,
  (4, 0.31622776601683794, 10000.0): 0.0018507518649738008}
 
+lhapdf_MSTW = {
+ (1, 0.1, 1): 0.43071,
+ (1, 0.1, 3): 0.41700802616344,
+ (1, 0.1, 10): 0.39461,
+ (4, 0.1, 1): 0,
+ (4, 0.1, 3): 0.017505781181267437,
+ (4, 0.1, 10): 0.028645,
+}
 
 class TestLHAPDF(unittest.TestCase):
-    def test_lhapdf(self):
+    def test_lhapdf_ct10(self):
         dir = tempfile.mkdtemp()
         io.download_pdfset('CT10', dir)
         p = pdf.PDF('CT10', 0, pdfdir=dir)
@@ -241,4 +249,18 @@ class TestLHAPDF(unittest.TestCase):
             self.assertAlmostEqual(p.xfxQ(*args) / lv,
                                    1, delta=0.0002,
                                    msg="Failed for {}".format(args))
+        shutil.rmtree(dir)
+
+    def test_lhapdf_mstw(self):
+        dir = tempfile.mkdtemp()
+        io.download_pdfset('MSTW2008nlo90cl', dir)
+        p = pdf.PDF('MSTW2008nlo90cl', 0, pdfdir=dir)
+        for args, lv in lhapdf_MSTW.items():
+            if lv == 0:
+                self.assertEqual(p.xfxQ(*args), lv,
+                                       msg="Failed for {}".format(args))    
+            else:
+                self.assertAlmostEqual(p.xfxQ(*args) / lv,
+                                       1, delta=0.0002,
+                                       msg="Failed for {}".format(args))
         shutil.rmtree(dir)

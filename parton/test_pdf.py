@@ -15,5 +15,5 @@ class TestPDF(unittest.TestCase):
         self.assertEqual(member.filename(),
                          os.path.join(dir, 'CT10', 'CT10_0001.dat'))
         meta, grids = member.load()
-        grid = pdf.PDFGrid.from_block(grids[0])
+        pdf.PDFGrid.from_block(grids[0])
         shutil.rmtree(dir)
