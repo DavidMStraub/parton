@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/DavidMStraub/parton.svg?branch=master)](https://travis-ci.org/DavidMStraub/parton) [![Coverage Status](https://coveralls.io/repos/github/DavidMStraub/parton/badge.svg?branch=master)](https://coveralls.io/github/DavidMStraub/parton?branch=master)
 
-# parton &ndash; a Python package for parton densities and parton luminosities
+# parton &ndash; a Python package for parton distributions and parton luminosities
 
-parton is a Python package providing parton density functions and parton luminosities. It uses the PDF data files provided by the [LHAPDF](https://lhapdf.hepforge.org/) project. Its API is  partially compatible to LHAPDF's Python API, even though only a subset of its features are implemented.
+parton is a Python package providing parton distribution functions and parton luminosities. It uses the PDF data files provided by the [LHAPDF](https://lhapdf.hepforge.org/) project. Its API is  partially compatible to LHAPDF's Python API, even though only a subset of its features are implemented.
 
 parton is written in pure Python, i.e. it runs on Linux, Mac OS, and Windows.
 
