@@ -33,7 +33,7 @@ The API for numerically evaluating PDFs is modeled after LHAPDF's Python API:
 from parton import mkPDF
 pdf = mkPDF('CT10', 0)
 # up quark PDF at x=0.1, Q=1000 GeV
-pdf.xfxQ(1, 0.1, 1000)
+pdf.xfxQ(2, 0.1, 1000)
 ```
 If the PDF sets are in a non-default location (on Linux, the default location is `~/.local/share/parton/`), this directory can be changed through `mkPDF`'s `pdfdir` argument.
 
@@ -42,8 +42,8 @@ Parton luminosities are accessed similarly through the `PLumi` class, but the fa
 from parton import PLumi
 # pdf has been defined above
 plumi = PLumi(pdf, Q2=1000)
-# u-ubar parton luminosity shat/s=0.1
-plumi.L(1, -1, 0.1)
+# u-ubar parton luminosity at shat/s=0.1
+plumi.L(2, -2, 0.1)
 ```
 
 ## License
