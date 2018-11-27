@@ -1,2 +1,2 @@
 from . import pdf
-from .pdf import mkPDF
+from .pdf import mkPDF, PDF, PLumi
