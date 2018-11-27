@@ -4,9 +4,10 @@ with open('README.md', encoding='utf-8') as f:
     LONG_DESCRIPTION = f.read()
 
 setup(name='parton',
-      version='0.1-alpha1',
+      version='0.1',
       author='David M. Straub',
       author_email='david.straub@tum.de',
+      description='Python package for parton densities and parton luminosities',
       long_description=LONG_DESCRIPTION,
       long_description_content_type='text/markdown',
       license='MIT',
