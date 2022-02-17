@@ -14,8 +14,8 @@ def data_dir():
     return datadir
 
 
-URL_INDEX = 'https://lhapdf.hepforge.org/downloads?f=pdfsets/current/pdfsets.index'
-URL_PDF = 'https://lhapdf.hepforge.org/downloads?f=pdfsets/current/{}.tar.gz'
+URL_INDEX = 'https://lhapdfsets.web.cern.ch/current/pdfsets.index'
+URL_PDF = 'https://lhapdfsets.web.cern.ch/current/{}.tar.gz'
 
 
 def download_file(url, filename):
