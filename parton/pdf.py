@@ -73,7 +73,7 @@ class PDFSet(object):
         if not os.path.exists(filename):
             raise ValueError("File {} not found".format(filename))
         with open(filename, 'r') as f:
-            info = yaml.load(f)
+            info = yaml.safe_load(f)
         self.info = info
 
 
@@ -106,7 +106,7 @@ class PDFMember(object):
         with open(filename, 'r') as f:
             contents = f.read()
         blocks = contents.split('\n---\n')
-        meta = yaml.load(blocks[0])
+        meta = yaml.safe_load(blocks[0])
         grids = blocks[1:-1]  # omit 1st (YAML) and last (empty) block
         return meta, grids
 
