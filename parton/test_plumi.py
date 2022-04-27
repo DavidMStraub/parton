@@ -16,9 +16,9 @@ def interpolator_slow(pl, p1, p2):
         def _int(x):
             return f1(x) * f2(t / x) / x
         return scipy.integrate.quad(lambda x: _int(x), t, 1)[0]
-    _x = np.linspace(1e-8, 1, num=pl.N)
-    _y = y(_x)
-    return scipy.interpolate.interp1d(_x, _y, kind='cubic', bounds_error=True)
+    _Lx = np.logspace(np.log10(pl.x_min), 0, num=int(pl.N/10))
+    _y = y(_Lx)
+    return scipy.interpolate.interp1d(np.log(_Lx), _y, kind='cubic', bounds_error=True)
 
 
 class TestPartonLumi(unittest.TestCase):
@@ -30,9 +30,9 @@ class TestPartonLumi(unittest.TestCase):
 
         for f in (0, 1, 4):
             int_slow = interpolator_slow(pl, f, -f)
-            for t in (0.2, 0.5, 0.7):
+            for t in (0.01, 0.05, 0.25):
                 L = pl.L(f, -f, t)
-                L_slow = int_slow(t)
-                self.assertAlmostEqual(L / L_slow, 1, delta=0.1,
+                L_slow = int_slow(np.log(t))
+                self.assertAlmostEqual(L / L_slow, 1, delta=0.01,
                                        msg="Failed for {}".format((f, t)))
         shutil.rmtree(dir)
