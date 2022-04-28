@@ -16,9 +16,9 @@ def interpolator_slow(pl, p1, p2):
         def _int(x):
             return f1(x) * f2(t / x) / x
         return scipy.integrate.quad(lambda x: _int(x), t, 1)[0]
-    _Lx = np.logspace(np.log10(pl.x_min), 0, num=int(pl.N/10))
-    _y = y(_Lx)
-    return scipy.interpolate.interp1d(np.log(_Lx), _y, kind='cubic', bounds_error=True)
+    _x = np.logspace(np.log10(pl.x_min), 0, num=int(pl.N/10))
+    _y = y(_x)
+    return scipy.interpolate.interp1d(np.log(_x), _y, kind='cubic', bounds_error=True)
 
 
 class TestPartonLumi(unittest.TestCase):
