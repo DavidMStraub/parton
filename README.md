@@ -50,9 +50,13 @@ plumi.L(2, -2, 0.1)
 
 parton is released under the MIT license.
 
-## Author
+## Contributors
 
-parton was written by David M. Straub.
+parton was originally written by David M. Straub (@DavidMStraub)
+
+Other contributors:
+
+- Peter Stangl (@peterstangl)
 
 ## Citation info
 
