@@ -214,7 +214,8 @@ class PLumi(object):
         for the factorization scale squared `Q2` in GeV^2."""
         self.pdf = pdf
         self.Q2 = Q2
-        self.N = 200
+        self.N = 1000
+        self.x_min = np.min([np.min(v.x) for v in pdf.pdfgrids])
         self._interpolators = {}
 
     def _interpolator(self, p1, p2):
@@ -222,11 +223,11 @@ class PLumi(object):
             return self.pdf.xfxQ2(p1, x, self.Q2).ravel() / x
         def f2(x):
             return self.pdf.xfxQ2(p2, x, self.Q2).ravel() / x
-        _Lx = np.linspace(-10, 0, num=self.N)
-        _f1 = np.flip(f1(np.exp(_Lx)).ravel(), 0)
-        _f2 = np.flip(f2(np.exp(_Lx)).ravel(), 0)
-        _y = np.convolve(_f1, _f2, 'full')[:self.N] / self.N * 10
-        return scipy.interpolate.interp1d(np.flip(_Lx, 0), _y, kind='cubic', bounds_error=False, fill_value=np.nan)
+        _x = np.logspace(np.log10(self.x_min), 0, num=self.N)
+        _f1 = f1(_x)
+        _f2 = f2(_x)
+        _y = np.convolve(_f1, _f2, 'full')[-self.N:] / self.N * (-np.log(self.x_min))
+        return scipy.interpolate.interp1d(np.log(_x), _y, kind='cubic', bounds_error=False, fill_value=np.nan)
 
     def interpolator(self, p1, p2):
         """Return an instance of the `scipy.interpolate.interp1d` interpolator
