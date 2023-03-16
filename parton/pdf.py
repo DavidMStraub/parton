@@ -24,6 +24,12 @@ class MyRectBivariateSpline(scipy.interpolate.RectBivariateSpline):
         self.x_min, self.x_max = np.amin(x), np.amax(x)
         self.y_min, self.y_max = np.amin(y), np.amax(y)
 
+        # a small margin is added to the min and max values to avoid numerical issues
+        self.x_min = self.x_min - abs(self.x_min)/1e10
+        self.x_max = self.x_max + abs(self.x_max)/1e10
+        self.y_min = self.y_min - abs(self.y_min)/1e10
+        self.y_max = self.y_max + abs(self.y_max)/1e10
+
     def __call__(self, x, y, *args, **kwargs):
         """Call the `MyRectBivariateSpline` instance.
 
