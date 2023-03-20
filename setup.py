@@ -5,7 +5,7 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="parton",
-    version="0.2",
+    version="0.2.1",
     author="David M. Straub",
     author_email="david.straub@tum.de",
     description="Python package for parton distributions and parton luminosities",
