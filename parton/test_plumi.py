@@ -24,15 +24,16 @@ def interpolator_slow(pl, p1, p2):
 class TestPartonLumi(unittest.TestCase):
     def test_plumi(self):
         dir = tempfile.mkdtemp()
-        io.download_pdfset('CT10', dir)
-        pd = pdf.PDF('CT10', member=0, pdfdir=dir)
-        pl = pdf.PLumi(pd, Q2=1000**2)
+        for pdfset in ['CT10', 'NNPDF31_nnlo_as_0118', 'NNPDF30_nnlo_as_0118']:
+            io.download_pdfset(pdfset, dir)
+            pd = pdf.PDF(pdfset, member=0, pdfdir=dir)
+            pl = pdf.PLumi(pd, Q2=1000**2)
 
-        for f in (0, 1, 4):
-            int_slow = interpolator_slow(pl, f, -f)
-            for t in (0.01, 0.05, 0.25):
-                L = pl.L(f, -f, t)
-                L_slow = int_slow(np.log(t))
-                self.assertAlmostEqual(L / L_slow, 1, delta=0.01,
-                                       msg="Failed for {}".format((f, t)))
+            for f in (0, 1, 4):
+                int_slow = interpolator_slow(pl, f, -f)
+                for t in (0.01, 0.05, 0.25):
+                    L = pl.L(f, -f, t)
+                    L_slow = int_slow(np.log(t))
+                    self.assertAlmostEqual(L / L_slow, 1, delta=0.01,
+                                        msg="Failed for {}".format((pdfset, f, t)))
         shutil.rmtree(dir)
