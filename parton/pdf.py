@@ -216,7 +216,8 @@ class PDF(object):
         if grid == True:
             res = np.full((np.size(x), np.size(Q2)), np.nan)
         else:
-            res = np.full(np.broadcast_shapes(flavor, x, Q2), np.nan)
+            flavor, x, Q2 = map(np.asarray, (flavor, x, Q2))
+            res = np.full(np.broadcast_shapes(flavor.shape, x.shape, Q2.shape), np.nan)
         for i, pdfgrid in enumerate(self.pdfgrids):
             _res = pdfgrid.xfxQ2(flavor, x, Q2, grid=grid)
             res[np.isnan(res)] = _res[np.isnan(res)]
