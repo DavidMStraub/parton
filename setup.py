@@ -13,5 +13,5 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(),
-    install_requires=["numpy", "scipy", "setuptools", "pyyaml", "appdirs"],
+    install_requires=["numpy>=1.20.0", "scipy", "setuptools", "pyyaml", "appdirs"],
 )

@@ -36,6 +36,8 @@ class MyRectBivariateSpline(scipy.interpolate.RectBivariateSpline):
         The shape of the inputs and outputs is the same as for
         `scipy.interpolate.RectBivariateSpline`."""
         # the following code is taken from scipy/interpolate/interpolate.py
+        if not kwargs.get("grid", True) and x.shape != y.shape:
+            x, y = np.broadcast_arrays(x, y)
         if self.bounds_error or self.fill_value is not None:
             out_of_bounds_x = (x < self.x_min) | (x > self.x_max)
             out_of_bounds_y = (y < self.y_min) | (y > self.y_max)
@@ -51,10 +53,14 @@ class MyRectBivariateSpline(scipy.interpolate.RectBivariateSpline):
         z = super().__call__(x, y, *args, **kwargs)
 
         if self.fill_value is not None:
-            if any_out_of_bounds_x:
-                z[out_of_bounds_x, :] = self.fill_value
-            if any_out_of_bounds_y:
-                z[:, out_of_bounds_y] = self.fill_value
+            if kwargs.get("grid", True):
+                if any_out_of_bounds_x:
+                    z[out_of_bounds_x, :] = self.fill_value
+                if any_out_of_bounds_y:
+                    z[:, out_of_bounds_y] = self.fill_value
+            else:
+                if any_out_of_bounds_x or any_out_of_bounds_y:
+                    z[out_of_bounds_x | out_of_bounds_y] = self.fill_value
         return z
 
 
@@ -168,10 +174,21 @@ class PDFGrid(object):
             self._interpolators[flavor] = MyRectBivariateSpline(self.logx, self.logQ2, self.xfgrid[:, i].reshape(m, n), bounds_error=False, fill_value=np.nan)
         return self._interpolators[flavor]
 
-    def xfxQ2(self, flavor, x, Q2):
+    def xfxQ2(self, flavor, x, Q2, grid=True):
         """Return x*f(x) for flavor `flavor`, momentum fraction `x` and
         squared factorization scale in units of GeV^2, `Q2`."""
-        return self.interpolator(flavor)(np.log(x), np.log(Q2))
+        flavors = np.unique(flavor)
+        if grid and len(flavors) > 1:
+            raise RuntimeError("No logical way to make a grid for multiple flavors")
+        elif grid:
+            return self.interpolator(flavors[0])(np.log(x), np.log(Q2), grid=grid)
+        # this could be further optimized to not evaluate every point for every flavor
+        flavor, x, Q2 = np.broadcast_arrays(flavor, x, Q2)
+        out = self.interpolator(flavors[0])(np.log(x), np.log(Q2), grid=False)
+        for f in flavors[1:]:
+            mask = flavor == f
+            out[mask] = self.interpolator(f)(np.log(x), np.log(Q2), grid=False)[mask]
+        return out
 
 
 class PDF(object):
@@ -188,25 +205,24 @@ class PDF(object):
         meta, grids = self.pdfmember.load()
         self.pdfgrids = [PDFGrid.from_block(grid) for grid in grids]
 
-    def xfxQ(self, flavor, x, Q):
+    def xfxQ(self, flavor, x, Q, grid=True):
         """Return x*f(x) by specifying flavor, `x`, and factorization scale
         `Q` in GeV."""
-        return self.xfxQ2(flavor, x, Q**2)
+        return self.xfxQ2(flavor, x, Q**2, grid=grid)
 
-    def xfxQ2(self, flavor, x, Q2):
+    def xfxQ2(self, flavor, x, Q2, grid=True):
         """Return x*f(x) by specifying flavor, `x`, and factorization scale
         squared `Q2` in GeV^2."""
-        res = np.empty((np.size(x), np.size(Q2)))
-        res[:] = np.nan
+        if grid == True:
+            res = np.full((np.size(x), np.size(Q2)), np.nan)
+        else:
+            flavor, x, Q2 = map(np.asarray, (flavor, x, Q2))
+            res = np.full(np.broadcast_shapes(flavor.shape, x.shape, Q2.shape), np.nan)
         for i, pdfgrid in enumerate(self.pdfgrids):
-            _res = np.atleast_2d(pdfgrid.xfxQ2(flavor, x, Q2))
+            _res = pdfgrid.xfxQ2(flavor, x, Q2, grid=grid)
             res[np.isnan(res)] = _res[np.isnan(res)]
-            if np.any(np.isnan(res)):
-                continue
-            else:
-                if np.size(res) == 1:
-                    res = float(res)
-                return res
+            if not np.any(np.isnan(res)):
+                break
         if np.size(res) == 1:
             res = float(res)
         return res
