@@ -22,7 +22,7 @@ python3 -m parton
 For instance, to install a specific PDF set, run
 ```
 python3 -m parton update
-python3 -m parton install 'CT10/0'
+python3 -m parton install 'CT10'
 ```
 If you already have a directory with PDF sets (e.g. from LHAPDF), that can be used as well.
 
