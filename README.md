@@ -31,7 +31,7 @@ If you already have a directory with PDF sets (e.g. from LHAPDF), that can be us
 The API for numerically evaluating PDFs is modeled after LHAPDF's Python API:
 ```python
 from parton import mkPDF
-pdf = mkPDF('CT10', 0)
+pdf = mkPDF('CT10')
 # up quark PDF at x=0.1, Q=1000 GeV
 pdf.xfxQ(2, 0.1, 1000)
 ```
