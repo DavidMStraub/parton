@@ -1,5 +1,6 @@
 from . import io
 import os
+import re
 import yaml
 from io import StringIO
 import numpy as np
@@ -117,9 +118,12 @@ class PDFMember(object):
             raise ValueError("Data file {} not found".format(filename))
         with open(filename, 'r') as f:
             contents = f.read()
-        blocks = contents.split('\n---\n')
+        blocks = re.split(r'\n\s*---\s*\n', contents)
         meta = yaml.safe_load(blocks[0])
-        grids = blocks[1:-1]  # omit 1st (YAML) and last (empty) block
+        if len(blocks) > 1 and not blocks[-1].strip():
+            grids = blocks[1:-1]  # omit first (YAML) and last (empty) block
+        else:
+            grids = blocks[1:]  # only omit first (YAML) block
         return meta, grids
 
 
