@@ -118,7 +118,7 @@ class PDFMember(object):
             raise ValueError("Data file {} not found".format(filename))
         with open(filename, 'r') as f:
             contents = f.read()
-        blocks = re.split(r'\n\s*---\s*\n', contents)
+        blocks = re.split(r'\n\s*---\s*\n?', contents)
         meta = yaml.safe_load(blocks[0])
         if len(blocks) > 1 and not blocks[-1].strip():
             grids = blocks[1:-1]  # omit first (YAML) and last (empty) block
